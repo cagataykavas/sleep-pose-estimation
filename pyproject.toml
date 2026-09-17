@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sleep-pose-evaluation"
+version = "0.1.0"
+description = "Validated post-processing and evaluation toolkit for sleep-pose detection"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Çağatay Kavas"}]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4,<9", "ruff>=0.12,<1"]
+inference = ["opencv-python-headless>=4.10,<5", "ultralytics>=8.3,<9"]
+
+[project.scripts]
+sleep-pose = "sleep_pose.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]
