@@ -47,3 +47,16 @@ The original graduation project used YOLOv8 for sleep-pose detection over 14,715
 images and reported approximately 0.978 mAP. That trained model and dataset are not redistributed
 here. This repository provides independently runnable engineering code around the evaluation and
 post-processing boundary rather than pretending synthetic tests reproduce the original result.
+
+
+## Saliency localization audit
+
+`audit_saliency_localization` evaluates whether a non-negative attribution map is concentrated inside the annotated pose bounding box. It combines three complementary signals:
+
+- energy-in-box: the fraction of total attribution mass inside the target;
+- pointing game: whether the deterministic peak lies inside the target;
+- concentration lift: energy-in-box divided by the target's image-area share.
+
+The area-normalized lift prevents a large box from appearing faithful simply because it covers most pixels. A configurable maximum box-area guard also marks trivially broad localization evidence as unsuitable for gating. The report is deterministic and JSON-ready, with explicit reason codes for CI or experiment artifacts.
+
+This audit measures spatial alignment, not causal faithfulness. A heatmap can overlap the annotated person while still relying on spurious features, and bounding boxes include background. Production evaluation should pair localization with deletion/insertion tests, negative controls, multiple explanation methods and subgroup analysis across pose, lighting, occlusion and camera conditions.
