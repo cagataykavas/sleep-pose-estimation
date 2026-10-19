@@ -12,6 +12,7 @@ class-aware non-maximum suppression, detection matching and stable frame-to-fram
 - class-aware greedy matching at a configurable IoU threshold
 - per-class precision, recall and F1 plus macro summaries
 - confidence filtering and hysteresis-based temporal pose smoothing
+- recovered, configurable MediaPipe landmark heuristic for body and face orientation
 - dependency-free CLI demonstration, tests and Python 3.11–3.13 CI
 - optional `ultralytics` and headless OpenCV inference dependencies
 
@@ -40,6 +41,11 @@ the common evaluation bug where duplicate detections inflate recall.
 
 Temporal smoothing maintains a bounded vote window and requires a candidate pose to persist
 before changing the reported state. Low-confidence frames do not force a transition.
+
+The recovered landmark rule is documented in
+[`docs/mediapipe-landmark-heuristic.md`](docs/mediapipe-landmark-heuristic.md). Its historical
+thresholds are configurable and must be recalibrated for a new camera or population; the tests
+cover rule behavior and failure handling rather than claiming dataset-level accuracy.
 
 ## Historical project context
 
