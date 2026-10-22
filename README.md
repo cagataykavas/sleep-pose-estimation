@@ -12,6 +12,7 @@ class-aware non-maximum suppression, detection matching and stable frame-to-fram
 - class-aware greedy matching at a configurable IoU threshold
 - per-class precision, recall and F1 plus macro summaries
 - confidence filtering and hysteresis-based temporal pose smoothing
+- explainable MediaPipe landmark heuristics with geometric evidence and fail-closed gating
 - dependency-free CLI demonstration, tests and Python 3.11–3.13 CI
 - optional `ultralytics` and headless OpenCV inference dependencies
 
@@ -40,6 +41,27 @@ the common evaluation bug where duplicate detections inflate recall.
 
 Temporal smoothing maintains a bounded vote window and requires a candidate pose to persist
 before changing the reported state. Low-confidence frames do not force a transition.
+
+## Explainable landmark classification
+
+The recovered MediaPipe prototype is available as a dependency-free policy function rather than
+camera-bound script code. It classifies body and head orientation from landmarks 7, 8, 12, 23
+and 24, and returns the hip-span ratio, ear-depth delta, minimum visibility and stable reason
+codes used for the decision. Missing landmarks, low visibility and degenerate torso geometry
+produce an `indeterminate` result instead of a guessed pose.
+
+```python
+from sleep_pose import classify_pose_landmarks, landmarks_from_mediapipe
+
+landmarks = landmarks_from_mediapipe(results.pose_landmarks.landmark)
+decision = classify_pose_landmarks(landmarks)
+print(decision.to_dict())
+```
+
+The default `0.30` body-ratio and `0.08` head-depth thresholds match the reusable video/image
+paths in the historical prototype. They are calibration inputs, not accuracy claims, and should
+be selected against a held-out, subject-separated dataset before clinical or safety-sensitive
+use.
 
 ## Historical project context
 
