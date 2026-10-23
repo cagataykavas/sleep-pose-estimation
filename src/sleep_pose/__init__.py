@@ -1,5 +1,10 @@
 """Sleep-pose post-processing and evaluation toolkit."""
 
+from .calibration import (
+    PoseCalibrationRecord,
+    SubjectSplitCalibration,
+    calibrate_subject_split,
+)
 from .geometry import class_aware_nms, intersection_over_union
 from .landmarks import (
     PoseHeuristicConfig,
@@ -18,7 +23,10 @@ __all__ = [
     "PoseHeuristicConfig",
     "PoseHeuristicDecision",
     "PoseLandmark",
+    "PoseCalibrationRecord",
     "PoseSmoother",
+    "SubjectSplitCalibration",
+    "calibrate_subject_split",
     "class_aware_nms",
     "classify_pose_landmarks",
     "evaluate_detections",
