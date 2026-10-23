@@ -18,6 +18,7 @@ inference = ["opencv-python-headless>=4.10,<5", "ultralytics>=8.3,<9"]
 
 [project.scripts]
 sleep-pose = "sleep_pose.cli:main"
+sleep-pose-calibrate = "sleep_pose.calibration:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

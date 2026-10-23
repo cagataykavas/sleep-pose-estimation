@@ -13,6 +13,7 @@ class-aware non-maximum suppression, detection matching and stable frame-to-fram
 - per-class precision, recall and F1 plus macro summaries
 - confidence filtering and hysteresis-based temporal pose smoothing
 - explainable MediaPipe landmark heuristics with geometric evidence and fail-closed gating
+- subject-separated threshold calibration with held-out confusion matrices and evidence digests
 - dependency-free CLI demonstration, tests and Python 3.11–3.13 CI
 - optional `ultralytics` and headless OpenCV inference dependencies
 
@@ -62,6 +63,27 @@ The default `0.30` body-ratio and `0.08` head-depth thresholds match the reusabl
 paths in the historical prototype. They are calibration inputs, not accuracy claims, and should
 be selected against a held-out, subject-separated dataset before clinical or safety-sensitive
 use.
+
+## Subject-separated calibration
+
+`sleep-pose-calibrate` selects body and head thresholds using only explicitly named calibration
+subjects, then evaluates the frozen thresholds on disjoint validation subjects. It rejects
+overlapping, missing, unassigned or duplicated identities and emits per-class precision, recall,
+F1, confusion matrices and a deterministic SHA-256 digest binding the records, split and selected
+thresholds.
+
+```bash
+sleep-pose-calibrate landmark-evidence.jsonl \
+  --calibration-subject subject-01 \
+  --calibration-subject subject-02 \
+  --validation-subject subject-03
+```
+
+Each strict JSONL record contains a unique `record_id`, `subject_id`, the hip-span ratio, signed
+hip-depth difference, absolute and signed ear-depth differences, and the body/head reference
+labels. Validation records never participate in candidate generation, scoring or tie-breaking.
+The command deliberately consumes derived landmark evidence rather than images, so it does not
+replace detector evaluation, subgroup analysis or external dataset provenance controls.
 
 ## Historical project context
 
